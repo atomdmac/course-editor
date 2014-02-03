@@ -30,7 +30,7 @@
 <div id="track-col" class="column">
     <h1>Track</h1>
     <button class="add-btn" data-bind="click: addTrack">+</button>
-    <button class="sub-btn">-</button>
+    <button class="sub-btn" data-bind="click: removeTrack">-</button>
     <br />
     <select multiple="true" data-bind="options: tracks,
                                         optionsText: function (item) {
@@ -44,8 +44,13 @@
 
 <div id="chapter-col" class="column">
     <h1>Chapter</h1>
-    <button class="add-btn" data-bind="enable: selectedTrack(), click: selectedTrack() ? selectedTrack().addChapter : null">+</button>
-    <button class="sub-btn">-</button>
+    <button class="add-btn" data-bind="enable: selectedTrack(), click: selectedTrack() ? selectedTrack().addChapter: null">+</button>
+    <button class="sub-btn" data-bind="enable: selectedChapter(),
+                                        click: selectedTrack() ?
+                                        function () {
+                                            console.log(selectedTrack());
+                                            selectedTrack().removeChapter(selectedChapter())
+                                        } : null">-</button>
     <br />
     <select multiple="true" data-bind="options: selectedTrack() ? selectedTrack().chapters : [],
                                         optionsText: function (item) {
@@ -60,7 +65,11 @@
 <div id="page-col" class="column">
     <h1>Page</h1>
     <button class="add-btn" data-bind="enable: selectedChapter(), click: selectedChapter() ? selectedChapter().addPage : null">+</button>
-    <button class="sub-btn">-</button>
+    <button class="sub-btn" data-bind="enable: selectedPage(),
+                                        click: selectedChapter() ?
+                                        function () {
+                                            selectedChapter().removePage(selectedPage());
+                                        } : null">-</button>
     <br />
     <select multiple="true" data-bind="options: selectedChapter() ? selectedChapter().pages : [],
                                         optionsText: function (item) {

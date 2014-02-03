@@ -8,15 +8,15 @@ function App ($, ko) {
         var self = this;
         
         this.id     = ko.observable(id     || "");
-        this.title  = ko.observable(title  || "DEFAULT TITLE");
+        this.title  = ko.observable(title  || "New Title");
         this.config = ko.observable(config || {});
         this.chapters = ko.observableArray(chapters || []);
         
         this.addChapter = function () {
             self.chapters.push(new Chapter());
         }
-        this.removeChapter = function () {
-            // TODO
+        this.removeChapter = function (chapter) {
+            self.chapters.remove(chapter);
         }
     };
     
@@ -33,7 +33,7 @@ function App ($, ko) {
         };
         
         this.removePage = function (page) {
-            // TODO
+            self.pages.remove(page);
         };
     };
     
@@ -62,6 +62,10 @@ function App ($, ko) {
         
         this.addTrack = function () {
             this.tracks.push(new Track());
+        };
+        
+        this.removeTrack = function (track) {
+            this.tracks.remove(track);
         };
     }
     
