@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Knockout Test</title>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/knockout.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    
+    <style type="text/css">
+        .name {
+            float: left;
+        }
+        .cost {
+            float: right;
+        }
+        .thing {
+            margin: 20px 0 0 0;
+            width: 200px;
+            clear: both;
+            border-top: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Things!</h1>
+<div data-bind="foreach: things">
+    <div class="thing">
+        <span class="name" data-bind="text: name"></span>
+        <span class="cost" data-bind="text: cost"></span>
+    </div>
+</div>
+
+</body>
+</html>
