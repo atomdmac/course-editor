@@ -130,6 +130,8 @@ function App ($, ko) {
          * @return Void
          */
         this.parse = function (json) {
+            // Save raw data for later.
+            this.rawData = json;
             this.tracks = ko.observableArray([]);
             for(var track in json.tracks) {
                 track = json.tracks[track];
@@ -158,7 +160,49 @@ function App ($, ko) {
          * @return {String | Object}
          */
         this.toJSON = function () {
-            // TODO
+            var output = {};
+                output.tracks = [];
+                output.chapters = [];
+                output.pages    = [];
+                
+            var rawTracks   = ko.toJS(this.tracks);
+            
+            for(var t in rawTracks) {
+                t = rawTracks[t];
+                
+                output.tracks.push({
+                    id: t.id,
+                    label: t.title,
+                    chapters: [],
+                    config: t.config
+                });
+                
+                var rawChapters = ko.toJS(t.chapters);
+                
+                for(var c in rawChapters) {
+                    c = rawChapters[c];
+                    output.chapters.push({
+                        id: c.id,
+                        label: c.title,
+                        pages: [],
+                        config: c.config
+                    });
+                    output.tracks[output.tracks.length - 1].chapters.push(c.id);
+                    
+                    var rawPages    = ko.toJS(c.pages);
+                    for(var p in rawPages) {
+                        p = rawPages[p];
+                        output.pages.push({
+                            id: p.id,
+                            label: p.title,
+                            config: p.config
+                        })
+                        output.chapters[output.chapters.length - 1].pages.push(p.id);
+                    }
+                }
+            }
+            
+            return $.extend(true, {}, this.rawData, output);
         };
     };
     
@@ -167,11 +211,16 @@ function App ($, ko) {
     $.ajax({
         url: "data/data.json",
         success: function (data, status, xhr) {
-            console.log("data: ", data);
             cm.parse(JSON.parse(data));
             ko.applyBindings(cm);
         }
     });
+    
+    $("#save-btn").bind("click", function () {
+        var json = JSON.stringify(cm.toJSON(), null, "\t").replace(/\n/g, "\r\n");
+        
+        console.log(json);
+    })
 }
 // 6089080149487118
 // 61323843
