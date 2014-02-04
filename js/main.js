@@ -67,9 +67,55 @@ function App ($, ko) {
         this.removeTrack = function (track) {
             this.tracks.remove(track);
         };
-    }
+        
+        /**
+         * Parse raw course data into the editor so it can be manipulated.
+         * @param json {String | Object} Raw course JSON/Object.
+         * @return Void
+         */
+        this.parse = function (json) {
+            this.tracks = ko.observableArray([]);
+            for(var track in json.tracks) {
+                track = json.tracks[track];
+                var t = new Track(track.id, track.label, [], track.config);
+                
+                for(var chapter in track.chapters) {
+                    chapter = json.chapters[track.chapters[chapter]];
+                    var c = new Chapter(chapter.id, chapter.label, [], chapter.config);
+                    
+                    for(var page in chapter.pages) {
+                        page = json.pages[chapter.pages[page]];
+                        var p = new Page(page.id, page.label, page.path, page.config);
+                        
+                        c.pages.push(p);
+                    }
+                    
+                    t.chapters.push(c);
+                }
+                
+                this.tracks.push(t);
+            }
+        };
+        
+        /**
+         * Parse the current course structure to JSON.
+         * @return {String | Object}
+         */
+        this.toJSON = function () {
+            // TODO
+        };
+    };
     
-    ko.applyBindings(CourseModel);
+    var cm = new CourseModel();
+    
+    $.ajax({
+        url: "data/data.json",
+        success: function (data, status, xhr) {
+            console.log("data: ", data);
+            cm.parse(JSON.parse(data));
+            ko.applyBindings(cm);
+        }
+    });
 }
 // 6089080149487118
 // 61323843
