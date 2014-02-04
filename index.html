@@ -8,12 +8,19 @@
     <script type="text/javascript" src="js/main.js"></script>
     
     <style type="text/css">
+        body {
+            font-family: sans-serif;
+            /*background: #999;*/
+        }
         .column {
-            float: left;
+            display: inline-block;
             width: 350px;
             height: 100%;
-            padding: 20px;
+            margin: 0px 20px 30px 20px;
+            padding: 0px 20px 30px 20px;
             border: 1px solid black;
+            /*background: #fff;*/
+            vertical-align: top;
         }
         .add-btn, .sub-btn {
             width: 30px;
@@ -23,15 +30,28 @@
             height: 150px;
             margin: 10px 0;
         }
+        label {
+            display: inline-block;
+            width: 40px;
+            margin-right: 10px;
+            text-align: right;
+        }
+        
+        input[type="text"] {
+            width: 250px;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 
 <body>
-    
+
 <div id="track-col" class="column">
     <h1>Track</h1>
     <button class="add-btn" data-bind="click: addTrack">+</button>
     <button class="sub-btn" data-bind="click: removeTrack">-</button>
+    <button class="up-btn" data-bind="click: selectedTrack() ? moveTrackUp(selectedTrack): null">Up</button>
+    <button class="down-btn" data-bind="click: selectedTrack() ? moveTrackDown(selectedTrack) : null">Down</button>
     <br />
     <select multiple="true" data-bind="options: tracks,
                                         optionsText: function (item) {
@@ -52,15 +72,21 @@
     <button class="sub-btn" data-bind="enable: selectedChapter(),
                                         click: selectedTrack() ?
                                         function () {
-                                            console.log(selectedTrack());
                                             selectedTrack().removeChapter(selectedChapter())
                                         } : null">-</button>
+    
+    <button class="up-btn" data-bind="enable: selectedChapter(), click: selectedChapter() ? selectedTrack().moveChapterUp(selectedChapter) : null">Up</button>
+    <button class="down-btn" data-bind="enable: selectedChapter(), click: selectedChapter() ? selectedTrack().moveChapterDown(selectedChapter) : null">Down</button>
     <br />
+    
     <select multiple="true" data-bind="options: selectedTrack() ? selectedTrack().chapters : [],
                                         optionsText: function (item) {
                                             return item.title
                                         },
                                         value: selectedChapter"></select>
+    <br />
+    <label for="chapter-id">ID: </label>
+    <input id="chapter-id" type="text" data-bind="value: selectedChapter() ? selectedChapter().id : ''" />
     <br />
     <label for="chapter-title">Title: </label>
     <input id="chapter-title" type="text" data-bind="value: selectedChapter() ? selectedChapter().title : ''"/>
@@ -74,12 +100,18 @@
                                         function () {
                                             selectedChapter().removePage(selectedPage());
                                         } : null">-</button>
+    <button class="up-btn" data-bind="enable: selectedPage(), click: selectedPage() ? selectedChapter().movePageUp(selectedPage) : null">Up</button>
+    <button class="down-btn" data-bind="enable: selectedPage(), click: selectedPage() ? selectedChapter().movePageDown(selectedPage) : null">Down</button>
     <br />
+    
     <select multiple="true" data-bind="options: selectedChapter() ? selectedChapter().pages : [],
                                         optionsText: function (item) {
                                             return item.title
                                         },
                                         value: selectedPage"></select>
+    <br />
+    <label for="page-id">ID: </label>
+    <input id="page-id" type="text" data-bind="value: selectedPage() ? selectedPage().id : ''" />
     <br />
     <label for="page-title">Title: </label>
     <input id="page-title" type="text" data-bind="value: selectedPage() ? selectedPage().title : ''"/>

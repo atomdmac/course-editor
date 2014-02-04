@@ -14,10 +14,28 @@ function App ($, ko) {
         
         this.addChapter = function () {
             self.chapters.push(new Chapter());
-        }
+        };
         this.removeChapter = function (chapter) {
             self.chapters.remove(chapter);
-        }
+        };
+        
+        this.moveChapterUp = function (chapter) {
+            var index = self.chapters.indexOf(chapter());
+            if (index-1 < 0) {
+                return;
+            }
+            var c = self.chapters.splice(index-1, 1)[0];
+            self.chapters.splice(index, 0, c);
+        };
+        
+        this.moveChapterDown = function (chapter) {
+            var index = self.chapters.indexOf(chapter());
+            if (index+1 > self.chapters().length-1) {
+                return;
+            }
+            var c = self.chapters.splice(index+1, 1)[0];
+            self.chapters.splice(index, 0, c);
+        };
     };
     
     var Chapter = function (id, title, pages, config) {
@@ -35,6 +53,24 @@ function App ($, ko) {
         this.removePage = function (page) {
             self.pages.remove(page);
         };
+        
+        this.movePageUp = function (page) {
+            var index = self.pages.indexOf(page());
+            if (index-1 < 0) {
+                return;
+            }
+            var c = self.pages.splice(index-1, 1)[0];
+            self.pages.splice(index, 0, c);
+        };
+        
+        this.movePageDown = function (page) {
+            var index = self.pages.indexOf(page());
+            if (index+1 > self.pages().length-1) {
+                return;
+            }
+            var c = this.pages.splice(index+1, 1)[0];
+            self.pages.splice(index, 0, c);
+        };
     };
     
     var Page = function (id, title, path, config) {
@@ -48,6 +84,8 @@ function App ($, ko) {
     
     // Define dummy model.
     var CourseModel = function () {
+        var self = this;
+        
         this.selectedTrack   = ko.observable();
         this.selectedChapter = ko.observable();
         this.selectedPage    = ko.observable();
@@ -66,6 +104,24 @@ function App ($, ko) {
         
         this.removeTrack = function (track) {
             this.tracks.remove(track);
+        };
+        
+        this.moveTrackUp = function (track) {
+            var index = self.tracks.indexOf(track());
+            if (index-1 < 0) {
+                return;
+            }
+            var t = self.tracks.splice(index-1, 1)[0];
+            this.tracks.splice(index, 0, t);
+        };
+        
+        this.moveTrackDown = function (track) {
+            var index = self.tracks.indexOf(track());
+            if (index+1 > self.tracks().length-1) {
+                return;
+            }
+            var t = this.tracks.splice(index+1, 1)[0];
+            this.tracks.splice(index, 0, t);
         };
         
         /**
