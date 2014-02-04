@@ -51,8 +51,10 @@
     <h1>Track</h1>
     <button class="add-btn" data-bind="click: addTrack">+</button>
     <button class="sub-btn" data-bind="click: removeTrack">-</button>
-    <button class="up-btn" data-bind="click: selectedTrack() ? moveTrackUp(selectedTrack): null">Up</button>
-    <button class="down-btn" data-bind="click: selectedTrack() ? moveTrackDown(selectedTrack) : null">Down</button>
+    <button class="up-btn" data-bind="enable: selectedTrack(),
+                                      click: selectedTrack() ? moveTrackUp(selectedTrack): null">Up</button>
+    <button class="down-btn" data-bind="enable: selectedTrack(),
+                                        click: selectedTrack() ? moveTrackDown(selectedTrack) : null">Down</button>
     <br />
     <select multiple="true" data-bind="options: tracks,
                                         optionsText: function (item) {
@@ -61,10 +63,12 @@
                                         value: selectedTrack"></select>
     <br />
     <label for="track-id">ID:</label>
-    <input id="track-id" type="text" data-bind="value: selectedTrack() ? selectedTrack().id : ''" />
+    <input id="track-id" type="text" data-bind="enable: selectedTrack(),
+                                                value: selectedTrack() ? selectedTrack().id : ''" />
     <br />
     <label for="track-title">Title:</label>
-    <input id="track-title" type="text" data-bind="value: selectedTrack() ? selectedTrack().title : ''"/>
+    <input id="track-title" type="text" data-bind="enable: selectedTrack(),
+                                                   value: selectedTrack() ? selectedTrack().title : ''"/>
     <br />
     <label for="track-optional">Optional:</label>
     <input id="track-optional" type="checkbox" data-bind="enable: selectedTrack(),
@@ -91,10 +95,12 @@
                                         value: selectedChapter"></select>
     <br />
     <label for="chapter-id">ID: </label>
-    <input id="chapter-id" type="text" data-bind="value: selectedChapter() ? selectedChapter().id : ''" />
+    <input id="chapter-id" type="text" data-bind="enable: selectedChapter(),
+                                                  value: selectedChapter() ? selectedChapter().id : ''" />
     <br />
     <label for="chapter-title">Title: </label>
-    <input id="chapter-title" type="text" data-bind="value: selectedChapter() ? selectedChapter().title : ''"/>
+    <input id="chapter-title" type="text" data-bind="enable: selectedChapter(),
+                                                     value: selectedChapter() ? selectedChapter().title : ''"/>
     <br />
     <label for="chapter-optional">Optional:</label>
     <input id="chapter-optional" type="checkbox" data-bind="enable: selectedChapter(),
@@ -120,16 +126,19 @@
                                         value: selectedPage"></select>
     <br />
     <label for="page-id">ID: </label>
-    <input id="page-id" type="text" data-bind="value: selectedPage() ? selectedPage().id : ''" />
+    <input id="page-id" type="text" data-bind="enable: selectedPage(),
+                                               value: selectedPage() ? selectedPage().id : ''" />
     <br />
     <label for="page-title">Title: </label>
-    <input id="page-title" type="text" data-bind="value: selectedPage() ? selectedPage().title : ''"/>
+    <input id="page-title" type="text" data-bind="enable: selectedPage(),
+                                                  value: selectedPage() ? selectedPage().title : ''"/>
     <br />
     <label for="page-path">Path: </label>
-    <input id="page-path" type="text" data-bind="value: selectedPage() ? selectedPage().path : ''"/>
+    <input id="page-path" type="text" data-bind="enable: selectedPage(),
+                                                 value: selectedPage() ? selectedPage().path : ''"/>
     <label for="chapter-optional">Optional:</label>
     <input id="page-optional" type="checkbox" data-bind="enable: selectedPage(),
-                                                            checked: selectedPage() ? selectedPage().optional : false"/>
+                                                         checked: selectedPage() ? selectedPage().optional : false"/>
 </div>
 
 </body>
