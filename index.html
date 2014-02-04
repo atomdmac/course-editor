@@ -32,7 +32,7 @@
         }
         label {
             display: inline-block;
-            width: 40px;
+            width: 60px;
             margin-right: 10px;
             text-align: right;
         }
@@ -60,11 +60,15 @@
                                         },
                                         value: selectedTrack"></select>
     <br />
-    <label for="track-id">ID: </label>
+    <label for="track-id">ID:</label>
     <input id="track-id" type="text" data-bind="value: selectedTrack() ? selectedTrack().id : ''" />
     <br />
-    <label for="track-title">Title: </label>
+    <label for="track-title">Title:</label>
     <input id="track-title" type="text" data-bind="value: selectedTrack() ? selectedTrack().title : ''"/>
+    <br />
+    <label for="track-optional">Optional:</label>
+    <input id="track-optional" type="checkbox" data-bind="enable: selectedTrack(),
+                                                          checked: selectedTrack() ? selectedTrack().optional : false"/>
 </div>
 
 <div id="chapter-col" class="column">
@@ -91,6 +95,10 @@
     <br />
     <label for="chapter-title">Title: </label>
     <input id="chapter-title" type="text" data-bind="value: selectedChapter() ? selectedChapter().title : ''"/>
+    <br />
+    <label for="chapter-optional">Optional:</label>
+    <input id="chapter-optional" type="checkbox" data-bind="enable: selectedChapter(),
+                                                            checked: selectedChapter() ? selectedChapter().optional : false"/>
 </div>
 
 <div id="page-col" class="column">
@@ -119,6 +127,9 @@
     <br />
     <label for="page-path">Path: </label>
     <input id="page-path" type="text" data-bind="value: selectedPage() ? selectedPage().path : ''"/>
+    <label for="chapter-optional">Optional:</label>
+    <input id="page-optional" type="checkbox" data-bind="enable: selectedPage(),
+                                                            checked: selectedPage() ? selectedPage().optional : false"/>
 </div>
 
 </body>

@@ -4,12 +4,13 @@ $(document).ready(function () {
 function App ($, ko) {
     
     // Define Track, Chapter and Page models.
-    var Track = function (id, title, chapters, config) {
+    var Track = function (id, title, chapters, optional, config) {
         var self = this;
         
         this.id     = ko.observable(id     || "");
         this.title  = ko.observable(title  || "New Title");
         this.config = ko.observable(config || {});
+        this.optional = ko.observable(optional);
         this.chapters = ko.observableArray(chapters || []);
         
         this.addChapter = function () {
@@ -38,12 +39,13 @@ function App ($, ko) {
         };
     };
     
-    var Chapter = function (id, title, pages, config) {
+    var Chapter = function (id, title, pages, optional, config) {
         var self = this;
         
         this.id     = ko.observable(id || "");
         this.title  = ko.observable(title || "New Chapter");
         this.pages  = ko.observableArray(pages || []);
+        this.optional = ko.observable(optional);
         this.config = config || {};
         
         this.addPage = function () {
@@ -73,12 +75,13 @@ function App ($, ko) {
         };
     };
     
-    var Page = function (id, title, path, config) {
+    var Page = function (id, title, path, optional, config) {
         var self = this;
         
         this.id     = ko.observable(id || "");
         this.config = config || {};
         this.title  = ko.observable(title || "New Page");
+        this.optional = ko.observable(optional);
         this.path   = ko.observable(path || "path/to/content/");
     }
     
@@ -89,14 +92,6 @@ function App ($, ko) {
         this.selectedTrack   = ko.observable();
         this.selectedChapter = ko.observable();
         this.selectedPage    = ko.observable();
-        
-        this.tracks = ko.observableArray([
-            new Track("main", "Main Track", [
-                new Chapter("01", "Chapter 01", [
-                    new Page("0101")
-                ])
-            ])
-        ]);
         
         this.addTrack = function () {
             this.tracks.push(new Track());
@@ -135,15 +130,15 @@ function App ($, ko) {
             this.tracks = ko.observableArray([]);
             for(var track in json.tracks) {
                 track = json.tracks[track];
-                var t = new Track(track.id, track.label, [], track.config);
+                var t = new Track(track.id, track.label, [], track.optional, track.config);
                 
                 for(var chapter in track.chapters) {
                     chapter = json.chapters[track.chapters[chapter]];
-                    var c = new Chapter(chapter.id, chapter.label, [], chapter.config);
+                    var c = new Chapter(chapter.id, chapter.label, [], chapter.optional, chapter.config);
                     
                     for(var page in chapter.pages) {
                         page = json.pages[chapter.pages[page]];
-                        var p = new Page(page.id, page.label, page.path, page.config);
+                        var p = new Page(page.id, page.label, page.path, page.optional, page.config);
                         
                         c.pages.push(p);
                     }
@@ -160,8 +155,8 @@ function App ($, ko) {
          * @return {String | Object}
          */
         this.toJSON = function () {
-            var output = {};
-                output.tracks = [];
+            var output          = {};
+                output.tracks   = [];
                 output.chapters = [];
                 output.pages    = [];
                 
@@ -174,7 +169,8 @@ function App ($, ko) {
                     id: t.id,
                     label: t.title,
                     chapters: [],
-                    config: t.config
+                    config: t.config,
+                    optional: t.optional
                 });
                 
                 var rawChapters = ko.toJS(t.chapters);
@@ -185,7 +181,8 @@ function App ($, ko) {
                         id: c.id,
                         label: c.title,
                         pages: [],
-                        config: c.config
+                        config: c.config,
+                        optional: c.optional
                     });
                     output.tracks[output.tracks.length - 1].chapters.push(c.id);
                     
@@ -195,7 +192,8 @@ function App ($, ko) {
                         output.pages.push({
                             id: p.id,
                             label: p.title,
-                            config: p.config
+                            config: p.config,
+                            optional: p.optional
                         })
                         output.chapters[output.chapters.length - 1].pages.push(p.id);
                     }
@@ -217,10 +215,15 @@ function App ($, ko) {
     });
     
     $("#save-btn").bind("click", function () {
+        function replacer(key, value) {
+            if (key === "optional" && value === false) {
+                return undefined;
+            } else {
+                return value;
+            }
+        }
         var json = JSON.stringify(cm.toJSON(), null, "\t").replace(/\n/g, "\r\n");
         
         console.log(json);
     })
 }
-// 6089080149487118
-// 61323843
